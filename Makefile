@@ -46,6 +46,8 @@ install: libldacdec.so
 	ln -sf libldacdec.so libldacdec.so.1
 	cp -a libldacdec.so libldacdec.so.1 /usr/lib/
 	cp libldacBT_dec.h /usr/include/ldac/libldacBT_dec.h
+	patchelf --set-soname libldacBT_dec.so libldacdec.so
+	mv libldacdec.so libldacBT_dec.so
 %.so:
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
