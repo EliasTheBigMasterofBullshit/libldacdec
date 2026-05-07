@@ -23,3 +23,12 @@ jobs:
         with:
           name: libldacdec-1.0.tar.gz
           path: /home/runner/work/libldacdec/libldacdec-1.0.tar.gz
+          
+      - name: Release "libldacdec tarball release"
+        uses: softprops/action-gh-release@v1
+        with:
+         body: developed by @anonymix007
+         tag_name: workflow_${{github.run_number}}
+         name: Release ${{github.run_number}}
+         files: |
+            /home/runner/work/libldacdec/libldacdec-1.0.tar.gz
