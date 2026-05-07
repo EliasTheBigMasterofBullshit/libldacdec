@@ -1,0 +1,25 @@
+name: Create Release Tarball
+
+on:
+  push:
+  workflow_dispatch: 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Package Project
+        run: tar -czf libldacdec.tar.gz .
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libldacdec.tar.gz
+          path: libldacdec.tar.gz
