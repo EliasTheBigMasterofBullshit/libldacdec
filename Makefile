@@ -23,18 +23,20 @@ endif
 VPATH += libldac/src/
 LDFLAGS += -L.
 
+PREFIX ?= /usr/lib
+
 all: libldacdec.so ldacdec ldacenc
 
-libldacdec.so: LDFLAGS += -shared -fpic -Wl,-soname,libldacdec.so.1
-libldacdec.so: CFLAGS += -fpic
-libldacdec.so: libldacdec.o bit_allocation.o huffCodes.o bit_reader.o utility.o imdct.o spectrum.o
+libldacBT_dec.so: LDFLAGS += -shared -fpic -Wl,-soname,libldacBT_dec.so.1
+libldacBT_dec.so: CFLAGS += -fpic
+libldacBT_dec.so: libldacdec.o bit_allocation.o huffCodes.o bit_reader.o utility.o imdct.o spectrum.o
 
 ldacenc: ldacenc.o ldaclib.o ldacBT.o
 
 ldacenc: LDLIBS += $(shell pkg-config sndfile --libs) $(shell pkg-config samplerate --libs)
 ldacenc: ldacenc.o ldaclib.o ldacBT.o
 
-ldacdec: libldacdec.so ldacdec.o
+ldacdec: libldacBT_dec.so ldacdec.o
 ldacdec: LDFLAGS += -Wl,-rpath=.
 ldacdec: LDLIBS += -lldacdec -lsndfile
 
@@ -44,10 +46,8 @@ mdct_imdct: mdct_imdct.o ldaclib.o imdct.o
 
 install: libldacdec.so
 	ln -sf libldacdec.so libldacdec.so.1
-	cp -a libldacdec.so libldacdec.so.1 /usr/lib/
-	cp libldacBT_dec.h /usr/include/ldac/libldacBT_dec.h
-	patchelf --set-soname libldacBT_dec.so libldacdec.so
-	mv libldacdec.so libldacBT_dec.so
+	cp -a libldacdec.so libldacdec.so.1 ${DESTDIR}${PREFIX}/
+	cp libldacBT_dec.h {DESTDIR}${PREFIX}/include/ldac/libldacBT_dec.h
 %.so:
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
