@@ -16,10 +16,10 @@ jobs:
           submodules: 'recursive'
 
       - name: Package Project
-        run: tar -czf libldacdec.tar.gz .
+        run: tar -czf project-${GITHUB_REF_NAME}.tar.gz .
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
-          name: libldacdec.tar.gz
-          path: libldacdec.tar.gz
+          name: project-${GITHUB_REF_NAME}.tar.gz
+          path: project-${GITHUB_REF_NAME}.tar.gz
