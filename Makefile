@@ -25,20 +25,20 @@ LDFLAGS += -L.
 
 PREFIX ?= /usr/lib
 
-all: libldacBT_dec.so ldacdec ldacenc
+all: ldac
 
 libldacBT_dec.so: LDFLAGS += -shared -fpic -Wl,-soname,libldacBT_dec.so.1
 libldacBT_dec.so: CFLAGS += -fpic
 libldacBT_dec.so: libldacdec.o bit_allocation.o huffCodes.o bit_reader.o utility.o imdct.o spectrum.o
 
-ldacenc: libldacBT_enc.so ldacenc.o ldaclib.o ldacBT.o
+ldac: libldacBT_enc.so ldacenc.o ldaclib.o ldacBT.o
 
-ldacenc: LDLIBS += -lldacBT_enc $(shell pkg-config sndfile --libs) $(shell pkg-config samplerate --libs)
-ldacenc: libldacBT_enc.so ldacenc.o ldaclib.o ldacBT.o
+ldac: LDLIBS += -lldacBT_enc $(shell pkg-config sndfile --libs) $(shell pkg-config samplerate --libs)
+ldac: libldacBT_enc.so ldacenc.o ldaclib.o ldacBT.o
 
-ldacdec: libldacBT_dec.so ldacdec.o
-ldacdec: LDFLAGS += -Wl,-rpath=.
-ldacdec: LDLIBS += -lldacBT_dec -lsndfile
+ldac: libldacBT_dec.so ldacdec.o
+ldac: LDFLAGS += -Wl,-rpath=.
+ldac: LDLIBS += -lldacBT_dec -lsndfile
 
 mdct_imdct: LDLIBS += $(shell pkg-config sndfile --libs)
 #mdct_imdct: CFLAGS += -DSINGLE_PRECISION
@@ -51,9 +51,18 @@ install: libldacBT_dec.so
 %.so:
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
+install: ldac
+	ln -sf libldacBT_enc.so libldacBT_enc.so.1
+	ln -sf libldacBT_dec.so libldacBT_dec.so.1
+	cp -a libldacBT_dec.so libldacBT_dec.so.1 ${DESTDIR}${PREFIX}/
+	cp -a libldacBT_enc.so libldacBT_enc.so.1 ${DESTDIR}${PREFIX}/
+	cp libldacBT_dec.h {DESTDIR}${PREFIX}/include/ldac/libldacBT_dec.h
+%.so:
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
 .PHONY: clean
 clean:
-	rm -f *.d *.o ldacenc ldacdec libldacdec.so libldacdec.so.1
+	rm -f *.d *.o ldacenc ldacdec libldacBT_dec.so libldacBT_dec.so.1
 
 -include *.d
 
