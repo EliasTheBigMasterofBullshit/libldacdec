@@ -31,11 +31,10 @@ libldacBT_dec.so: LDFLAGS += -shared -fpic -Wl,-soname,libldacBT_dec.so.1
 libldacBT_dec.so: CFLAGS += -fpic
 libldacBT_dec.so: libldacdec.o bit_allocation.o huffCodes.o bit_reader.o utility.o imdct.o spectrum.o
 
-ldacenc: ldacenc.o ldaclib.o ldacBT.o
+ldacenc: libldacBT_enc.so ldacenc.o ldaclib.o ldacBT.o
 
-ldacenc: LDFLAGS += -shared -fpic -Wl,-soname,libldacBT_enc.so.1
-ldacenc: LDLIBS += $(shell pkg-config sndfile --libs) $(shell pkg-config samplerate --libs)
-ldacenc: ldacenc.o ldaclib.o ldacBT.o
+ldacenc: LDLIBS += -lldacBT_enc $(shell pkg-config sndfile --libs) $(shell pkg-config samplerate --libs)
+ldacenc: libldacBT_enc.so ldacenc.o ldaclib.o ldacBT.o
 
 ldacdec: libldacBT_dec.so ldacdec.o
 ldacdec: LDFLAGS += -Wl,-rpath=.
