@@ -17,8 +17,8 @@ jobs:
 
       - name: Package Project
         run: |
-          cd /home/runner/work/libldacdec/libldacdec 
-          tar -czf /home/runner/work/libldacdec/libldacdec-1.0.tar.gz .
+          cd /home/runner/work/libldacdec/
+          tar -czf /home/runner/work/libldacdec/libldacdec-1.0.tar.gz libldacdec
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
