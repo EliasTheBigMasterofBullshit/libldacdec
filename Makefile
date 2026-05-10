@@ -36,8 +36,8 @@ mdct_imdct: LDLIBS += $(shell pkg-config sndfile --libs)
 mdct_imdct: mdct_imdct.o ldaclib.o imdct.o
 
 install: libldacBT_dec.so
-	install -d -m 755 "libldacBT_dec.so" "${DESTDIR}${PREFIX}/"
-	install -d -m 644 "libldacBT_dec.h" "{DESTDIR}${PREFIX}/include/ldac/libldacBT_dec.h"
+	install -m 755 "libldacBT_dec.so" "${DESTDIR}${PREFIX}/"
+	install -m 644 "libldacBT_dec.h" "{DESTDIR}${PREFIX}/include/ldac/libldacBT_dec.h"
 	ln -sf "{DESTDIR}${PREFIX}/libldacBT_dec.so" "{DESTDIR}${PREFIX}/libldacBT_dec.so.1
 %.so:
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
